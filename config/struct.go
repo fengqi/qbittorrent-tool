@@ -8,7 +8,7 @@ type Config struct {
 	Password     string       `json:"password"`
 	AutoCategory AutoCategory `json:"auto_category"`
 	DomainTag    DomainTag    `json:"domain_tag"`
-	UploadLimit  UploadLimit  `json:"upload_limit"`
+	//UploadLimit  UploadLimit  `json:"upload_limit"`
 }
 
 type AutoCategory struct {
