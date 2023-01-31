@@ -13,7 +13,12 @@ func AutoCategory(c *config.Config, api *qbittorrent.Api) {
 		return
 	}
 
-	torrentList, err := api.GetTorrentListWithoutCategory()
+	params := map[string]string{
+		"filter":   "all",
+		"category": "",
+		"limit":    "1000",
+	}
+	torrentList, err := api.GetTorrentList(params)
 	if err != nil {
 		log.Printf("[ERR] get torrent list without category err %v\n", err)
 		return

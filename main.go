@@ -24,4 +24,5 @@ func main() {
 	}
 
 	tool.AutoCategory(c, api)
+	tool.DomainTag(c, api)
 }
