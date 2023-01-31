@@ -28,7 +28,7 @@ func (a *Api) GetTorrentList(params map[string]string) ([]*Torrent, error) {
 	var torrentList []*Torrent
 	err = json.Unmarshal(bytes, &torrentList)
 
-	return torrentList, nil
+	return torrentList, err
 }
 
 // GetTorrentListWithoutCategory 获取没有分类的种子
