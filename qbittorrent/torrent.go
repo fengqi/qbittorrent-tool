@@ -31,35 +31,6 @@ func (a *Api) GetTorrentList(params map[string]string) ([]*Torrent, error) {
 	return torrentList, err
 }
 
-// GetTorrentListWithoutCategory 获取没有分类的种子
-func (a *Api) GetTorrentListWithoutCategory() ([]*Torrent, error) {
-	infoApi := fmt.Sprintf("%s/api/v2/torrents/info?filter=all&category=&limit=%d", a.Host, 1000)
-	req, err := http.NewRequest("GET", infoApi, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	for _, item := range a.Cookie {
-		req.AddCookie(item)
-	}
-
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	bytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	var torrentList []*Torrent
-	err = json.Unmarshal(bytes, &torrentList)
-
-	return torrentList, nil
-}
-
 // GetTorrentTrackers 获取种子的有效tracker列表
 func (a *Api) GetTorrentTrackers(hash string) ([]*TorrentTracker, error) {
 	api := fmt.Sprintf("%s/api/v2/torrents/trackers?hash=%s", a.Host, hash)
