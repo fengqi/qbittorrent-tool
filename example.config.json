@@ -15,5 +15,28 @@
             "hdsky.me": "HDSky",
             "m-team.cc": "MTeam"
         }
+    },
+    "seeding_limits": {
+        "enable": true,
+        "rules": [
+            {
+                "ratio": 0,
+                "seeding_time": 7200,
+                "tags": ["刷流", "自动删除"],
+                "category": [],
+                "tracker": [],
+                "keyword": [],
+                "action": 1
+            },
+            {
+                "ratio": 0,
+                "seeding_time": 0,
+                "tags": ["通用包"],
+                "category": [],
+                "tracker": [],
+                "keyword": ["大包", "通用包", "继续保种"],
+                "action": 0
+            }
+        ]
     }
 }
