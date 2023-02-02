@@ -78,6 +78,36 @@ func (a *api) AddTags(hashes, tag string) error {
 	return err
 }
 
+// PauseTorrents 暂停种子
+func (a *api) PauseTorrents(hashes string) error {
+	api := fmt.Sprintf("%s/api/v2/torrents/pause", a.Host)
+	data := fmt.Sprintf("hashes=%s", hashes)
+
+	_, err := a.request(http.MethodPost, api, strings.NewReader(data))
+
+	return err
+}
+
+// DeleteTorrents 删除种子
+func (a *api) DeleteTorrents(hashes string, deleteFiles bool) error {
+	api := fmt.Sprintf("%s/api/v2/torrents/delete", a.Host)
+	data := fmt.Sprintf("hashes=%s&deleteFiles=%t", hashes, deleteFiles)
+
+	_, err := a.request(http.MethodPost, api, strings.NewReader(data))
+
+	return err
+}
+
+// SetSuperSeeding 设置超级做种
+func (a *api) SetSuperSeeding(hashes string, value bool) error {
+	api := fmt.Sprintf("%s/api/v2/torrents/setSuperSeeding", a.Host)
+	data := fmt.Sprintf("hashes=%s&value=%t", hashes, value)
+
+	_, err := a.request("POST", api, strings.NewReader(data))
+
+	return err
+}
+
 // 发起请求
 func (a *api) request(method, url string, body io.Reader) ([]byte, error) {
 	req, err := http.NewRequest(method, url, body)
