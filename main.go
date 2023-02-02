@@ -24,4 +24,5 @@ func main() {
 
 	tool.AutoCategory(c)
 	tool.DomainTag(c)
+	tool.SeedingLimits(c)
 }

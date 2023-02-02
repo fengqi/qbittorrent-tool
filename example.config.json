@@ -20,21 +20,21 @@
         "enable": true,
         "rules": [
             {
-                "ratio": 0,
+                "ratio": 5,
                 "seeding_time": 7200,
-                "tags": ["刷流", "自动删除"],
-                "category": [],
-                "tracker": [],
-                "keyword": [],
+                "tag": ["刷流", "自动删除"],
+                "category": ["分类1", "分类2"],
+                "tracker": ["baidu.com"],
+                "seeds_gt": 20,
+                "keyword": ["大包", "通用包"],
                 "action": 1
             },
             {
-                "ratio": 0,
-                "seeding_time": 0,
-                "tags": ["通用包"],
-                "category": [],
-                "tracker": [],
                 "keyword": ["大包", "通用包", "继续保种"],
+                "action": 0
+            },
+            {
+                "seeds_lt": 5,
                 "action": 0
             }
         ]
