@@ -8,7 +8,7 @@ import (
 )
 
 // AutoCategory 根据保存目录设置分类
-func AutoCategory(c *config.Config, api *qbittorrent.Api) {
+func AutoCategory(c *config.Config) {
 	if !c.AutoCategory.Enable || c.AutoCategory.MapConfig == nil {
 		return
 	}
@@ -18,7 +18,7 @@ func AutoCategory(c *config.Config, api *qbittorrent.Api) {
 		"category": "",
 		"limit":    "1000",
 	}
-	torrentList, err := api.GetTorrentList(params)
+	torrentList, err := qbittorrent.Api.GetTorrentList(params)
 	if err != nil {
 		log.Printf("[ERR] get torrent list without category err %v\n", err)
 		return
@@ -32,7 +32,7 @@ func AutoCategory(c *config.Config, api *qbittorrent.Api) {
 			continue
 		}
 
-		err = api.SetCategory(i.Hash, category)
+		err = qbittorrent.Api.SetCategory(i.Hash, category)
 		if err != nil {
 			log.Printf("[ERR] set category: %s \tto: %s err: %v\n", category, i.Name, err)
 			continue

@@ -13,7 +13,7 @@ import (
 
 // GetTorrentList 获取种子列表
 // https://github.com/qbittorrent/qBittorrent/wiki/WebUI-API-(qBittorrent-4.1)#get-torrent-list
-func (a *Api) GetTorrentList(params map[string]string) ([]*Torrent, error) {
+func (a *api) GetTorrentList(params map[string]string) ([]*Torrent, error) {
 	query := url.Values{}
 	for k, v := range params {
 		query.Add(k, v)
@@ -32,7 +32,7 @@ func (a *Api) GetTorrentList(params map[string]string) ([]*Torrent, error) {
 }
 
 // GetTorrentTrackers 获取种子的有效tracker列表
-func (a *Api) GetTorrentTrackers(hash string) ([]*TorrentTracker, error) {
+func (a *api) GetTorrentTrackers(hash string) ([]*TorrentTracker, error) {
 	api := fmt.Sprintf("%s/api/v2/torrents/trackers?hash=%s", a.Host, hash)
 
 	bytes, err := a.request(http.MethodGet, api, nil)
@@ -59,7 +59,7 @@ func (a *Api) GetTorrentTrackers(hash string) ([]*TorrentTracker, error) {
 }
 
 // SetCategory 给种子设置分类
-func (a *Api) SetCategory(hashes, category string) error {
+func (a *api) SetCategory(hashes, category string) error {
 	api := fmt.Sprintf("%s/api/v2/torrents/setCategory", a.Host)
 	data := fmt.Sprintf("hashes=%s&category=%s", hashes, category)
 
@@ -69,7 +69,7 @@ func (a *Api) SetCategory(hashes, category string) error {
 }
 
 // AddTags 给种子添加标签
-func (a *Api) AddTags(hashes, tag string) error {
+func (a *api) AddTags(hashes, tag string) error {
 	api := fmt.Sprintf("%s/api/v2/torrents/addTags", a.Host)
 	data := fmt.Sprintf("hashes=%s&tags=%s", hashes, tag)
 
@@ -79,7 +79,7 @@ func (a *Api) AddTags(hashes, tag string) error {
 }
 
 // 发起请求
-func (a *Api) request(method, url string, body io.Reader) ([]byte, error) {
+func (a *api) request(method, url string, body io.Reader) ([]byte, error) {
 	req, err := http.NewRequest(method, url, body)
 	if err != nil {
 		return nil, err

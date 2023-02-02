@@ -2,7 +2,7 @@ package qbittorrent
 
 import "net/http"
 
-type Api struct {
+type api struct {
 	Host     string
 	Username string
 	Password string

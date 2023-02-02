@@ -17,12 +17,11 @@ func main() {
 		return
 	}
 
-	api, err := qbittorrent.Login(c)
-	if err != nil {
+	if err = qbittorrent.Init(c); err != nil {
 		fmt.Printf("[ERR] login to qbittorrent err %v\n", err)
 		return
 	}
 
-	tool.AutoCategory(c, api)
-	tool.DomainTag(c, api)
+	tool.AutoCategory(c)
+	tool.DomainTag(c)
 }
