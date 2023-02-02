@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func (t *Torrent) GetTrackerTag() (string, error) {
+func (t *Torrent) GetTrackerHost() (string, error) {
 	if t.Tracker == "" {
 		return "", errors.New("tracker empty")
 	}
