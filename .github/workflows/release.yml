@@ -10,12 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
-          go-version: ^1.19
+          cache: true
+          go-version-file: 'go.mod'
 
       - name: Build
         run: make release
@@ -24,7 +25,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: release/*
-          draft: true
           generate_release_notes: true
           body: |
             * 这是 GitHub Actions 自动化部署，更新日志应该很快会手动更新
