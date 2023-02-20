@@ -22,6 +22,7 @@
             {
                 "ratio": 5,
                 "seeding_time": 7200,
+                "activity_time": 7200,
                 "tag": ["刷流", "自动删除"],
                 "category": ["分类1", "分类2"],
                 "tracker": ["baidu.com"],

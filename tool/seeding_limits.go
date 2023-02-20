@@ -62,6 +62,16 @@ func matchRule(torrent *qbittorrent.Torrent, rules []config.SeedingLimitsRule) i
 			score += 1
 		}
 
+		// 最后活动时间，上传下载等都算
+		if rule.ActivityTime > 0 {
+			activityOn := time.Unix(int64(torrent.LastActivity), 0).In(loc)
+			deadOn := activityOn.Add(time.Minute * time.Duration(rule.ActivityTime))
+			if time.Now().In(loc).Before(deadOn) {
+				continue
+			}
+			score += 1
+		}
+
 		// 标签
 		if len(rule.Tag) != 0 && torrent.Tags != "" {
 			tags := strings.Split(torrent.Tags, ",")
