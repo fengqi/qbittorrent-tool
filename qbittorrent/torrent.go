@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"sort"
 	"strings"
 )
 
@@ -45,6 +46,10 @@ func (a *api) GetTorrentTrackers(hash string) ([]*TorrentTracker, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	sort.SliceStable(trackerList, func(i, j int) bool {
+		return trackerList[i].Status < trackerList[j].Status
+	})
 
 	i := 0
 	for _, item := range trackerList {
