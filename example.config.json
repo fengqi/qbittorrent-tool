@@ -39,5 +39,15 @@
                 "action": 0
             }
         ]
+    },
+    "status_tag": {
+        "enable": true,
+        "map_config" : {
+            "Work On Another Tracker": "",
+            "torrent not registered with this tracker": "种子被删除",
+            "err torrent banned": "种子被删除",
+            "skipping tracker announce (unreachable)": "Tracker不可用",
+            "Bad Gateway": "Tracker不可用"
+        }
     }
 }

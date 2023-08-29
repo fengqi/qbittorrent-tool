@@ -6,6 +6,8 @@ import (
 	"fengqi/qbittorrent-tool/tool"
 	"flag"
 	"fmt"
+	"log"
+	"strconv"
 )
 
 func main() {
@@ -22,7 +24,32 @@ func main() {
 		return
 	}
 
-	tool.AutoCategory(c)
-	tool.DomainTag(c)
-	tool.SeedingLimits(c)
+	offset := 0
+	limit := 1000
+	for {
+		params := map[string]string{
+			"filter": "all",
+			"sort":   "added_on",
+			"limit":  strconv.Itoa(limit),
+			"offset": strconv.Itoa(offset),
+		}
+		torrentList, err := qbittorrent.Api.GetTorrentList(params)
+		if err != nil {
+			log.Printf("[ERR] get torrent list err %v\n", err)
+			return
+		}
+
+		log.Printf("[INFO] get torrent list count: %d\n", len(torrentList))
+		for _, torrent := range torrentList {
+			tool.AutoCategory(c, torrent)
+			tool.DomainTag(c, torrent)
+			tool.SeedingLimits(c, torrent)
+			tool.StatusTag(c, torrent)
+		}
+
+		if len(torrentList) < limit {
+			break
+		}
+		offset += limit
+	}
 }

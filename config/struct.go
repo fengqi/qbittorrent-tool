@@ -10,6 +10,7 @@ type Config struct {
 	DomainTag    DomainTag    `json:"domain_tag"`
 	//UploadLimit  UploadLimit  `json:"upload_limit"`
 	SeedingLimits SeedingLimits `json:"seeding_limits"`
+	StatusTag     StatusTag     `json:"status_tag"`
 }
 
 type AutoCategory struct {
@@ -60,4 +61,9 @@ type SeedingLimitsRule struct {
 	SeedsLt      int      `json:"seeds_lt"`      // 当做种数小于，大于0生效
 	Keyword      []string `json:"keyword"`       // 当种子标题包括这些关键字，不为空生效
 	Action       int      `json:"action"`        // 动作：0继续做种、1暂停做种、2删除种子、3删除种子及所属文件、4启动超级做种
+}
+
+type StatusTag struct {
+	Enable    bool              `json:"enable"`
+	MapConfig map[string]string `json:"map_Config"`
 }

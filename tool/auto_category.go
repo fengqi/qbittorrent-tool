@@ -8,36 +8,22 @@ import (
 )
 
 // AutoCategory 根据保存目录设置分类
-func AutoCategory(c *config.Config) {
-	if !c.AutoCategory.Enable || c.AutoCategory.MapConfig == nil {
+func AutoCategory(c *config.Config, torrent *qbittorrent.Torrent) {
+	if torrent.Category != "" || !c.AutoCategory.Enable || c.AutoCategory.MapConfig == nil {
 		return
 	}
 
-	params := map[string]string{
-		"filter":   "all",
-		"category": "",
-		"limit":    "1000",
+	category, ok := c.AutoCategory.MapConfig[torrent.SavePath]
+	if !ok {
+		log.Printf("[WARN] get path %s categroy empty\n", torrent.SavePath)
+		return
 	}
-	torrentList, err := qbittorrent.Api.GetTorrentList(params)
+
+	err := qbittorrent.Api.SetCategory(torrent.Hash, category)
 	if err != nil {
-		log.Printf("[ERR] get torrent list without category err %v\n", err)
+		log.Printf("[ERR] set category: %s \tto: %s err: %v\n", category, torrent.Name, err)
 		return
 	}
 
-	log.Printf("[INFO] get torrent list without category count: %d\n", len(torrentList))
-	for _, i := range torrentList {
-		category, ok := c.AutoCategory.MapConfig[i.SavePath]
-		if !ok {
-			log.Printf("[WARN] get path %s categroy empty\n", i.SavePath)
-			continue
-		}
-
-		err = qbittorrent.Api.SetCategory(i.Hash, category)
-		if err != nil {
-			log.Printf("[ERR] set category: %s \tto: %s err: %v\n", category, i.Name, err)
-			continue
-		}
-
-		fmt.Printf("[INFO] set category: %s \tto: %s\n", category, i.Name)
-	}
+	fmt.Printf("[INFO] set category: %s \tto: %s\n", category, torrent.Name)
 }

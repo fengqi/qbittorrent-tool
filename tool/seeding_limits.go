@@ -5,35 +5,28 @@ import (
 	"fengqi/qbittorrent-tool/qbittorrent"
 	"fengqi/qbittorrent-tool/util"
 	"fmt"
-	"log"
 	"strings"
 	"time"
 )
 
 // SeedingLimits 做种限制加强版
 // 相比较于qb自带，增加根据标签、分类、关键字精确限制
-func SeedingLimits(c *config.Config) {
+func SeedingLimits(c *config.Config, torrent *qbittorrent.Torrent) {
 	if !c.SeedingLimits.Enable || len(c.SeedingLimits.Rules) == 0 {
 		return
 	}
 
-	params := map[string]string{
-		"filter": "seeding",
-		"sort":   "added_on",
-		"limit":  "1000",
-	}
-	torrentList, err := qbittorrent.Api.GetTorrentList(params)
-	if err != nil {
-		log.Printf("[ERR] get torrent list prepare set lmits err %v\n", err)
+	action := matchRule(torrent, c.SeedingLimits.Rules)
+	if action == 0 {
 		return
 	}
 
-	log.Printf("[INFO] get torrent list prepare set lmits count: %d\n", len(torrentList))
-	for _, item := range torrentList {
-		action := matchRule(item, c.SeedingLimits.Rules)
-		fmt.Printf("action:%d Tag:%s %s\n", action, item.Tags, item.Name)
-		executeAction(item.Hash, action)
+	if action == 1 && strings.Contains(torrent.State, "paused") {
+		return
 	}
+
+	fmt.Printf("action:%d %s\n", action, torrent.Name)
+	executeAction(torrent.Hash, action)
 }
 
 // 规则至少有一个生效，且生效的全部命中，action才有效，后面的规则会覆盖前面的
@@ -140,11 +133,10 @@ func matchRule(torrent *qbittorrent.Torrent, rules []config.SeedingLimitsRule) i
 }
 
 func executeAction(hash string, action int) {
-	if action == 0 {
-		return
-	}
-
 	switch action {
+	case 0:
+		break
+
 	case 1:
 		_ = qbittorrent.Api.PauseTorrents(hash)
 		break
@@ -160,6 +152,5 @@ func executeAction(hash string, action int) {
 	case 4:
 		_ = qbittorrent.Api.SetSuperSeeding(hash, true)
 		break
-
 	}
 }
