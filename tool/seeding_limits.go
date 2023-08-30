@@ -47,6 +47,9 @@ func matchRule(torrent *qbittorrent.Torrent, rules []config.SeedingLimitsRule) i
 
 		// 做种时间，从下载完成算起
 		if rule.SeedingTime > 0 {
+			if torrent.CompletionOn <= 0 {
+				continue
+			}
 			completionOn := time.Unix(int64(torrent.CompletionOn), 0).In(loc)
 			deadOn := completionOn.Add(time.Minute * time.Duration(rule.SeedingTime))
 			if time.Now().In(loc).Before(deadOn) {
