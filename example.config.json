@@ -41,8 +41,8 @@
                 "limits": {
                     "download": 131072,
                     "upload": 131072,
-                    "share": -2,
-                    "share_time": -2,
+                    "ratio": -2,
+                    "seeding_time": -2,
                     "inactive_share_time": -2
                 }
             }

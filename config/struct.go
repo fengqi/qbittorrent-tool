@@ -71,9 +71,9 @@ type StatusTag struct {
 }
 
 type Limits struct {
-	Download            int     `json:"download"`     // 下载限速，bytes/s，大于0生效
-	Upload              int     `json:"upload"`       // 上传限速，bytes/s，大于0生效
-	Ratio               float64 `json:"ratio"`        // 分享率，浮点数如：1.2，-2使用全局限制，-1不限制，等于0不生效
-	SeedingTime         int     `json:"seeding_time"` // 做种时间（分钟），-2使用全局限制，-1不限制，等于0不生效
-	InactiveSeedingTime int     `json:"seeding_time"` // 不活跃的做种时间（分钟），-2使用全局限制，-1不限制，等于0不生效
+	Download            int     `json:"download"`              // 下载限速，bytes/s，大于0生效
+	Upload              int     `json:"upload"`                // 上传限速，bytes/s，大于0生效
+	Ratio               float64 `json:"ratio"`                 // 分享率，浮点数如：1.2，-2使用全局限制，-1不限制，等于0不生效
+	SeedingTime         int     `json:"seeding_time"`          // 做种时间（分钟），-2使用全局限制，-1不限制，等于0不生效
+	InactiveSeedingTime int     `json:"inactive_seeding_time"` // 不活跃的做种时间（分钟），-2使用全局限制，-1不限制，等于0不生效
 }
