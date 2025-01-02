@@ -18,6 +18,7 @@
     },
     "seeding_limits": {
         "enable": true,
+        "resume": false,
         "rules": [
             {
                 "ratio": 5,

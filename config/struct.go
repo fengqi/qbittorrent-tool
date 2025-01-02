@@ -47,6 +47,7 @@ type LimiterTag struct {
 
 type SeedingLimits struct {
 	Enable bool                `json:"enable"`
+	Resume bool                `json:"resume"` // 已经被暂停的种子，符合条件后是否开启继续做种
 	Rules  []SeedingLimitsRule `json:"rules"`
 }
 

@@ -83,6 +83,16 @@ func (a *api) AddTags(hashes, tag string) error {
 	return err
 }
 
+// ResumeTorrents 继续种子
+func (a *api) ResumeTorrents(hashes string) error {
+	api := fmt.Sprintf("%s/api/v2/torrents/resume", a.Host)
+	data := fmt.Sprintf("hashes=%s", hashes)
+
+	_, err := a.request(http.MethodPost, api, strings.NewReader(data))
+
+	return err
+}
+
 // PauseTorrents 暂停种子
 func (a *api) PauseTorrents(hashes string) error {
 	api := fmt.Sprintf("%s/api/v2/torrents/pause", a.Host)

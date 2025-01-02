@@ -18,7 +18,9 @@ func SeedingLimits(c *config.Config, torrent *qbittorrent.Torrent) {
 
 	action := matchRule(torrent, c.SeedingLimits.Rules)
 	if action == 0 {
-		return
+		if !strings.Contains(torrent.State, "paused") || !c.SeedingLimits.Resume {
+			return
+		}
 	}
 
 	if action == 1 && strings.Contains(torrent.State, "paused") {
@@ -138,6 +140,7 @@ func matchRule(torrent *qbittorrent.Torrent, rules []config.SeedingLimitsRule) i
 func executeAction(hash string, action int) {
 	switch action {
 	case 0:
+		_ = qbittorrent.Api.ResumeTorrents(hash)
 		break
 
 	case 1:
