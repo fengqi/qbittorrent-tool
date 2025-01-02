@@ -37,7 +37,14 @@
             },
             {
                 "seeds_lt": 5,
-                "action": 0
+                "action": 0,
+                "limits": {
+                    "download": 131072,
+                    "upload": 131072,
+                    "share": -2,
+                    "share_time": -2,
+                    "inactive_share_time": -2
+                }
             }
         ]
     },

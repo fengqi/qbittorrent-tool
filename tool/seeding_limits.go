@@ -16,7 +16,7 @@ func SeedingLimits(c *config.Config, torrent *qbittorrent.Torrent) {
 		return
 	}
 
-	action := matchRule(torrent, c.SeedingLimits.Rules)
+	action, limits := matchRule(torrent, c.SeedingLimits.Rules)
 	if action == 0 {
 		if !strings.Contains(torrent.State, "paused") || !c.SeedingLimits.Resume {
 			return
@@ -28,12 +28,13 @@ func SeedingLimits(c *config.Config, torrent *qbittorrent.Torrent) {
 	}
 
 	fmt.Printf("action:%d %s\n", action, torrent.Name)
-	executeAction(torrent.Hash, action)
+	executeAction(torrent, action, limits)
 }
 
 // 规则至少有一个生效，且生效的全部命中，action才有效，后面的规则会覆盖前面的
-func matchRule(torrent *qbittorrent.Torrent, rules []config.SeedingLimitsRule) int {
+func matchRule(torrent *qbittorrent.Torrent, rules []config.SeedingLimitsRule) (int, *config.Limits) {
 	action := 0
+	var limits *config.Limits
 	loc, _ := time.LoadLocation("Asia/Shanghai")
 
 	for _, rule := range rules {
@@ -133,30 +134,64 @@ func matchRule(torrent *qbittorrent.Torrent, rules []config.SeedingLimitsRule) i
 		if score > 0 {
 			action = rule.Action
 		}
+		if action == 0 && limits == nil {
+			limits = rule.Limits
+		}
 	}
-	return action
+
+	return action, limits
 }
 
-func executeAction(hash string, action int) {
+func executeAction(torrent *qbittorrent.Torrent, action int, limits *config.Limits) {
 	switch action {
 	case 0:
-		_ = qbittorrent.Api.ResumeTorrents(hash)
+		_ = qbittorrent.Api.ResumeTorrents(torrent.Hash)
+		if limits == nil {
+			break
+		}
+		if limits.Download != torrent.DlLimit {
+			_ = qbittorrent.Api.SetDownloadLimit(torrent.Hash, limits.Download)
+		}
+		if limits.Upload != torrent.UpLimit {
+			_ = qbittorrent.Api.SetUploadLimit(torrent.Hash, limits.Download)
+		}
+
+		flag := false
+		radio := torrent.RatioLimit
+		if limits.Ratio != torrent.RatioLimit {
+			flag = true
+			radio = limits.Ratio
+		}
+		seedingTimeLimit := torrent.SeedingTimeLimit
+		if limits.SeedingTime != torrent.SeedingTimeLimit {
+			flag = true
+			seedingTimeLimit = limits.SeedingTime
+		}
+		inactiveSeedingTimeLimit := torrent.InactiveSeedingTimeLimit
+		if limits.InactiveSeedingTime != torrent.InactiveSeedingTimeLimit {
+			flag = true
+			inactiveSeedingTimeLimit = limits.InactiveSeedingTime
+		}
+		if flag {
+			_ = qbittorrent.Api.SetShareLimit(torrent.Hash, radio, seedingTimeLimit, inactiveSeedingTimeLimit)
+		}
+
 		break
 
 	case 1:
-		_ = qbittorrent.Api.PauseTorrents(hash)
+		_ = qbittorrent.Api.PauseTorrents(torrent.Hash)
 		break
 
 	case 2:
-		_ = qbittorrent.Api.DeleteTorrents(hash, false)
+		_ = qbittorrent.Api.DeleteTorrents(torrent.Hash, false)
 		break
 
 	case 3:
-		_ = qbittorrent.Api.DeleteTorrents(hash, true)
+		_ = qbittorrent.Api.DeleteTorrents(torrent.Hash, true)
 		break
 
 	case 4:
-		_ = qbittorrent.Api.SetSuperSeeding(hash, true)
+		_ = qbittorrent.Api.SetSuperSeeding(torrent.Hash, true)
 		break
 	}
 }

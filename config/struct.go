@@ -62,9 +62,18 @@ type SeedingLimitsRule struct {
 	SeedsLt      int      `json:"seeds_lt"`      // 当做种数小于，大于0生效
 	Keyword      []string `json:"keyword"`       // 当种子标题包括这些关键字，不为空生效
 	Action       int      `json:"action"`        // 动作：0继续做种、1暂停做种、2删除种子、3删除种子及所属文件、4启动超级做种
+	Limits       *Limits  `json:"limits"`        // 限速
 }
 
 type StatusTag struct {
 	Enable    bool              `json:"enable"`
 	MapConfig map[string]string `json:"map_Config"`
+}
+
+type Limits struct {
+	Download            int     `json:"download"`     // 下载限速，bytes/s，大于0生效
+	Upload              int     `json:"upload"`       // 上传限速，bytes/s，大于0生效
+	Ratio               float64 `json:"ratio"`        // 分享率，浮点数如：1.2，-2使用全局限制，-1不限制，等于0不生效
+	SeedingTime         int     `json:"seeding_time"` // 做种时间（分钟），-2使用全局限制，-1不限制，等于0不生效
+	InactiveSeedingTime int     `json:"seeding_time"` // 不活跃的做种时间（分钟），-2使用全局限制，-1不限制，等于0不生效
 }

@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -123,6 +122,40 @@ func (a *api) SetSuperSeeding(hashes string, value bool) error {
 	return err
 }
 
+// SetDownloadLimit 下载限速
+func (a *api) SetDownloadLimit(hashes string, speed int) error {
+	api := fmt.Sprintf("%s/api/v2/torrents/setDownloadLimit", a.Host)
+	data := fmt.Sprintf("hashes=%s&limit=%d", hashes, speed)
+
+	_, err := a.request("POST", api, strings.NewReader(data))
+
+	return err
+}
+
+// SetUploadLimit 上传限速
+func (a *api) SetUploadLimit(hashes string, speed int) error {
+	api := fmt.Sprintf("%s/api/v2/torrents/setUploadLimit", a.Host)
+	data := fmt.Sprintf("hashes=%s&limit=%d", hashes, speed)
+
+	_, err := a.request("POST", api, strings.NewReader(data))
+
+	return err
+}
+
+// SetShareLimit 设置分享率、时间限制
+func (a *api) SetShareLimit(hashes string, radio float64, seedingTime, inactiveSeedingTime int) error {
+	api := fmt.Sprintf("%s/api/v2/torrents/setShareLimits", a.Host)
+	data := fmt.Sprintf("hashes=%s&ratioLimit=%f&seedingTimeLimit=%d&inactiveSeedingTimeLimit=%d",
+		hashes,
+		radio,
+		seedingTime,
+		inactiveSeedingTime)
+
+	_, err := a.request("POST", api, strings.NewReader(data))
+
+	return err
+}
+
 // 发起请求
 func (a *api) request(method, url string, body io.Reader) ([]byte, error) {
 	req, err := http.NewRequest(method, url, body)
@@ -148,5 +181,5 @@ func (a *api) request(method, url string, body io.Reader) ([]byte, error) {
 		}
 	}(resp.Body)
 
-	return ioutil.ReadAll(resp.Body)
+	return io.ReadAll(resp.Body)
 }
