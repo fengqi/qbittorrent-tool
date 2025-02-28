@@ -83,6 +83,7 @@ func (a *api) AddTags(hashes, tag string) error {
 }
 
 // ResumeTorrents 继续种子
+// TODO  根据版本使用新旧接口：/api/v2/app/version
 func (a *api) ResumeTorrents(hashes string) error {
 	api := fmt.Sprintf("%s/api/v2/torrents/start", a.Host)
 	data := fmt.Sprintf("hashes=%s", hashes)
