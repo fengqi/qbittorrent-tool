@@ -34,7 +34,7 @@ func StatusTag(c *config.Config, torrent *qbittorrent.Torrent) {
 
 	if len(miss) > 0 {
 		for item, _ := range miss {
-			fmt.Printf("err: \"%s\" not map config\n", item)
+			fmt.Printf("err: \"%s: %s\" not map config\n", torrent.Name, item)
 		}
 	}
 
